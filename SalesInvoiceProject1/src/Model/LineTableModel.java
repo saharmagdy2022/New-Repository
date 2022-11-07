@@ -11,28 +11,28 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Sahar.Magdy
  */
-public class ItemTableModel extends AbstractTableModel{
+public class LineTableModel extends AbstractTableModel{
 
-    private String[] cols = {"No.", "Item Name", "Item Price", "Count", "Item Total"};
-    private List<ItemData> items;
+    private String[] columns = {"No.", "Item Name", "Item Price", "Count", "Item Total"};
+    private List<InvoiceLine> lines;
 
-    public ItemTableModel(List<ItemData> items) {
-        this.items = items;
+    public LineTableModel(List<InvoiceLine> items) {
+        this.lines = items;
     }
 
     @Override
     public int getRowCount() {
-        return items.size(); 
+        return lines.size(); 
     }
     
     @Override
     public int getColumnCount() {
-        return cols.length;
+        return columns.length;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ItemData item = items.get(rowIndex);
+        InvoiceLine item = lines.get(rowIndex);
         switch (columnIndex){
             case 0:
                 return item.getItemNum(); 
@@ -48,13 +48,13 @@ public class ItemTableModel extends AbstractTableModel{
         return "";
     }
 
-    public List<ItemData> getItems() {
-        return items;
+    public List<InvoiceLine> getItems() {
+        return lines;
     }
     
     @Override
     public String getColumnName(int columnIndex){
-        return cols[columnIndex];
+        return columns[columnIndex];
     }
           
 }

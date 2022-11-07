@@ -7,7 +7,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import view.SalesInvoiceFrame;
+import view.InvFrame;
 
 /**
  *
@@ -15,10 +15,10 @@ import view.SalesInvoiceFrame;
  */
 public class HeaderTableModel extends AbstractTableModel{
     
-    private List<InvoiceData> invoices;
+    private List<InvoiceHeader> invoices;
 
     //ArrayList<InvoiceData> invoices
-    public HeaderTableModel(List<InvoiceData> invoices) {
+    public HeaderTableModel(List<InvoiceHeader> invoices) {
         this.invoices = invoices;
     }
     
@@ -51,12 +51,12 @@ public class HeaderTableModel extends AbstractTableModel{
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         //get first item which will indeicate the row and then get the column using the switch
-        InvoiceData inv = invoices.get(rowIndex);
+        InvoiceHeader inv = invoices.get(rowIndex);
         switch (columnIndex){
             case 0:
                 return inv.getInvNum(); 
             case 1:
-                return SalesInvoiceFrame.dateFormat.format(inv.getInvDate());
+                return InvFrame.dateFormat.format(inv.getInvDate());
             case 2: 
                 return inv.getInvCus();
             case 3:

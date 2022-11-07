@@ -4,8 +4,8 @@
  */
 package view;
 
-import Controller.InvoiceListener;
-import Model.InvoiceData;
+import Controller.InvController;
+import Model.InvoiceHeader;
 import java.util.List;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,12 +19,12 @@ import javax.swing.JTable;
  *
  * @author Sahar.Magdy
  */
-public class SalesInvoiceFrame extends javax.swing.JFrame {
+public class InvFrame extends javax.swing.JFrame {
 
     /**
-     * Creates new form SalesInvoiceFrame
+     * Creates new form InvFrame
      */
-    public SalesInvoiceFrame() {
+    public InvFrame() {
         initComponents();
     }
 
@@ -242,14 +242,15 @@ public class SalesInvoiceFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InvFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InvFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InvFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SalesInvoiceFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(InvFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         try{
@@ -263,7 +264,7 @@ public class SalesInvoiceFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                SalesInvoiceFrame frame = new SalesInvoiceFrame();
+                InvFrame frame = new InvFrame();
                 frame.setVisible(true);
                 frame.listener.loadFile("InvoiceHeader.csv", "InvoiceLine.csv");
             }
@@ -293,13 +294,13 @@ public class SalesInvoiceFrame extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveMenu;
     // End of variables declaration//GEN-END:variables
 
-    private InvoiceListener listener = new InvoiceListener(this);
+    private InvController listener = new InvController(this);
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     
-    private ArrayList<InvoiceData> invoices;
+    private ArrayList<InvoiceHeader> invoices;
     //private HeaderTableModel headerTableModel;
     
-    public ArrayList<InvoiceData> getInvoices(){
+    public ArrayList<InvoiceHeader> getInvoices(){
         if(invoices == null){
             invoices = new ArrayList<>();
         }  
@@ -330,7 +331,7 @@ public class SalesInvoiceFrame extends javax.swing.JFrame {
         return invTotalLab;
     }
 
-    public InvoiceListener getListener() {
+    public InvController getListener() {
         return listener;
     }
       

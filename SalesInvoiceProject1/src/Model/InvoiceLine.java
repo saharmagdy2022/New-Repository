@@ -8,16 +8,16 @@ package Model;
  *
  * @author Sahar.Magdy
  */
-public class ItemData {
+public class InvoiceLine {
     
     private int itemNum;
     private String itemName;
     private double itemPrice;
     private int itemCount;
     
-    private InvoiceData invoices;
+    private InvoiceHeader invoices;
 
-    public ItemData(int itemNum, String itemName, double itemPrice, int itemCount, InvoiceData invoices) {
+    public InvoiceLine(int itemNum, String itemName, double itemPrice, int itemCount, InvoiceHeader invoices) {
         this.itemNum = itemNum;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
@@ -58,11 +58,11 @@ public class ItemData {
         this.itemCount = itemCount;
     }
 
-    public InvoiceData getInvoices() {
+    public InvoiceHeader getInvoices() {
         return invoices;
     }
 
-    public void setInvoices(InvoiceData invoices) {
+    public void setInvoices(InvoiceHeader invoices) {
         this.invoices = invoices;
     }
     
@@ -73,7 +73,7 @@ public class ItemData {
         return sum;
     }
     
-    public String toCSV(){
+    public String toString(){
         return invoices.getInvNum() +","+ itemName +","+ itemPrice +","+ itemCount;
     }
 }

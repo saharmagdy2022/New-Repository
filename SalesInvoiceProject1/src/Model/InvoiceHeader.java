@@ -6,18 +6,18 @@ package Model;
 
 import java.util.Date;
 import java.util.ArrayList;
-import view.SalesInvoiceFrame;
+import view.InvFrame;
 
 /**
  *
  * @author Sahar.Magdy
  */
-public class InvoiceData {
+public class InvoiceHeader {
     
     private int invNum;
     private String invCus;
     private Date invDate;
-    private ArrayList<ItemData> items; 
+    private ArrayList<InvoiceLine> items; 
 
     public int getInvNum() {
         return invNum;
@@ -43,7 +43,7 @@ public class InvoiceData {
         this.invDate = invDate;
     }
 
-    public ArrayList<ItemData> getItems() {
+    public ArrayList<InvoiceLine> getItems() {
         if (items == null)
         {
             items = new ArrayList<>();
@@ -51,13 +51,13 @@ public class InvoiceData {
         return items;
     }
 
-    public InvoiceData(int invNum, Date invDate, String invCus) {
+    public InvoiceHeader(int invNum, Date invDate, String invCus) {
         this.invNum = invNum;
         this.invDate = invDate;
         this.invCus = invCus;
     }
 
-    public void setItems(ArrayList<ItemData> items) {
+    public void setItems(ArrayList<InvoiceLine> items) {
         this.items = items;
     }
     
@@ -76,7 +76,7 @@ public class InvoiceData {
         return 0;
     }
     
-    public String toCSV(){
-        return invNum +","+ SalesInvoiceFrame.dateFormat.format(invDate) +","+ invCus;
+    public String toString(){ 
+        return invNum +","+ InvFrame.dateFormat.format(invDate) +","+ invCus;
     }
 }

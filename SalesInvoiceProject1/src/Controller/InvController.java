@@ -5,9 +5,9 @@
 package Controller;
 
 import Model.HeaderTableModel;
-import Model.InvoiceData;
-import Model.ItemData;
-import Model.ItemTableModel;
+import Model.InvoiceHeader;
+import Model.InvoiceLine;
+import Model.LineTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -26,22 +26,22 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import view.NewInvoiceDialog;
 import view.NewItemDialog;
-import view.SalesInvoiceFrame;
+import view.InvFrame;
 
 /**
  *
  * @author Sahar.Magdy
  */
-public class InvoiceListener implements ActionListener, ListSelectionListener{
+public class InvController implements ActionListener, ListSelectionListener{
 
-    private SalesInvoiceFrame frame;
+    private InvFrame frame;
     private NewInvoiceDialog  invDialog;
     private NewItemDialog itemDialog;
     
-    public InvoiceListener(SalesInvoiceFrame frame) {
+    public InvController(InvFrame frame) {
         this.frame = frame;
     }
-
+/*
     @Override
     public void actionPerformed(ActionEvent e) {
         //System.out.println("btn");
@@ -79,7 +79,7 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
                 break;
         }
     }
-
+*/
     @Override
     public void valueChanged(ListSelectionEvent e) {
     
@@ -87,16 +87,16 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
 
         if(row>-1 && row<frame.getInvoices().size())
         {
-            InvoiceData inv = frame.getInvoices().get(row);
-            List<ItemData> items = inv.getItems();
+            InvoiceHeader inv = frame.getInvoices().get(row);
+            List<InvoiceLine> items = inv.getItems();
             
             //Display the items of the selected invoice in item table
-            frame.getItemsTable().setModel(new ItemTableModel(items));
+            frame.getItemsTable().setModel(new LineTableModel(items));
 
             //Display the detials in the label section for the selected invoice from the header table
             frame.getInvNumLab().setText(""+inv.getInvNum());
             frame.getInvCusLab().setText(inv.getInvCus());
-            frame.getInvDateLab().setText(""+SalesInvoiceFrame.dateFormat.format(inv.getInvDate()));
+            frame.getInvDateLab().setText(""+InvFrame.dateFormat.format(inv.getInvDate()));
             frame.getInvTotalLab().setText(""+inv.ItemsTotal());
         } else {
             
@@ -106,7 +106,44 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
             frame.getInvDateLab().setText("");
             frame.getInvTotalLab().setText("");
             //remove data in item table
-            frame.getItemsTable().setModel(new ItemTableModel(new ArrayList<ItemData> ()));
+            frame.getItemsTable().setModel(new LineTableModel(new ArrayList<InvoiceLine> ()));
+        }
+    }
+      @Override
+    public void actionPerformed(ActionEvent e) {
+        //System.out.println("btn");
+        String actionCommand = e.getActionCommand();
+        switch(actionCommand){
+            case "New Invoice":
+                newInvoice();
+                break;
+            case "Delete Invoice":
+                delInvoice();
+                break;
+            case "New Item":
+                newItem();
+                break;
+            case "Delete Item":
+                delItem();
+                break;
+            case "Load File":
+                loadFile(null,null);
+                break;
+            case "Save Data":
+                saveData();
+                break;
+            case "newInvoiceOk":
+                newInvoiceOk();
+                break;
+            case "newInvoiceCancel":
+                newInvoiceCancel();
+                break;
+            case "newItemOk":
+                newItemOk();
+                break;
+            case "newItemCancel":
+                newItemCancel();
+                break;
         }
     }
     private void newInvoice() {
@@ -139,9 +176,9 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
         int row = frame.getItemsTable().getSelectedRow();
         if (row != -1){
             int hRow = frame.getInvoicesTable().getSelectedRow();
-            ItemTableModel itemTableModel = ((ItemTableModel)frame.getItemsTable().getModel()); 
-            itemTableModel.getItems().remove(row);
-            itemTableModel.fireTableDataChanged();
+            LineTableModel lineTableModel = ((LineTableModel)frame.getItemsTable().getModel()); 
+            lineTableModel.getItems().remove(row);
+            lineTableModel.fireTableDataChanged();
             ((HeaderTableModel)frame.getInvoicesTable().getModel()).fireTableDataChanged();
             frame.getInvoicesTable().setRowSelectionInterval(hRow, hRow);
         }
@@ -188,11 +225,11 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
                   
                   //add each invoice cell to a variable
                   int invNum = Integer.parseInt(invCell[0]);
-                  Date invDate = SalesInvoiceFrame.dateFormat.parse(invCell[1]);
+                  Date invDate = InvFrame.dateFormat.parse(invCell[1]);
                   String invNameS = invCell[2];
                   
                   //add each invoice line to array of invoices
-                  InvoiceData inv = new InvoiceData(invNum, invDate, invNameS);
+                  InvoiceHeader inv = new InvoiceHeader(invNum, invDate, invNameS);
                   frame.getInvoices().add(inv);
                 }
                 
@@ -207,8 +244,8 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
                   double itemPrice = Integer.parseInt(itemCell[2]);
                   int itemCount = Integer.parseInt(itemCell[3]);
                   
-                  InvoiceData inv = getInvoiceByNum(itemNum);
-                  ItemData item = new ItemData(itemNum,itemName,itemPrice,itemCount,inv);
+                  InvoiceHeader inv = getInvoiceByNum(itemNum);
+                  InvoiceLine item = new InvoiceLine(itemNum,itemName,itemPrice,itemCount,inv);
                   inv.getItems().add(item);
                 }
                 //frame.getInvoices())
@@ -226,11 +263,11 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
         String invoicesData = "";
         String itemsData = "";
         
-        for(InvoiceData invoice: frame.getInvoices()){
-            invoicesData += invoice.toCSV();
+        for(InvoiceHeader invoice: frame.getInvoices()){
+            invoicesData += invoice.toString();
             invoicesData += "\n";
-            for(ItemData item:invoice.getItems()){
-                itemsData += item.toCSV();
+            for(InvoiceLine item:invoice.getItems()){
+                itemsData += item.toString();
                 itemsData += "\n";   
             }
         }
@@ -262,8 +299,8 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
         }
     }
 
-    private InvoiceData getInvoiceByNum(int itemNum) {
-        for(InvoiceData inv: frame.getInvoices())
+    private InvoiceHeader getInvoiceByNum(int itemNum) {
+        for(InvoiceHeader inv: frame.getInvoices())
         {
             if(itemNum == inv.getInvNum())
             {
@@ -282,7 +319,7 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
         int num = getNextInvoiceNo();
         try{
             Date invDate = frame.dateFormat.parse(date); 
-            InvoiceData inv = new InvoiceData(num, invDate, Customer);
+            InvoiceHeader inv = new InvoiceHeader(num, invDate, Customer);
             frame.getInvoices().add(inv);
             ((HeaderTableModel)frame.getInvoicesTable().getModel()).fireTableDataChanged();
         } catch(ParseException pe){
@@ -292,7 +329,7 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
 
     private int getNextInvoiceNo(){
         int num = 0;
-        for (InvoiceData inv : frame.getInvoices()){
+        for (InvoiceHeader inv : frame.getInvoices()){
             if (inv.getInvNum() > num){
                 num = inv.getInvNum();
             }
@@ -316,14 +353,14 @@ public class InvoiceListener implements ActionListener, ListSelectionListener{
 
             //get selected invoice row
             int hRow = frame.getInvoicesTable().getSelectedRow();
-            InvoiceData inv = frame.getInvoices().get(hRow);
+            InvoiceHeader inv = frame.getInvoices().get(hRow);
             int no = inv.getInvNum();
-            ItemData item = new ItemData(no, itemCustomer, itemPrice, itemCount, inv);
+            InvoiceLine item = new InvoiceLine(no, itemCustomer, itemPrice, itemCount, inv);
             inv.getItems().add(item);
 
             //Update item table
-            ItemTableModel itemTableModel = ((ItemTableModel)frame.getItemsTable().getModel());
-            itemTableModel.fireTableDataChanged();
+            LineTableModel lineTableModel = ((LineTableModel)frame.getItemsTable().getModel());
+            lineTableModel.fireTableDataChanged();
             //Update Invoice table and labels to update the totals
             ((HeaderTableModel)frame.getInvoicesTable().getModel()).fireTableDataChanged();
             frame.getInvoicesTable().setRowSelectionInterval(hRow, hRow);        

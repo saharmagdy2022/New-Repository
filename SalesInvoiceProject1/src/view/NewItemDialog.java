@@ -24,7 +24,7 @@ public class NewItemDialog extends JDialog {
     private JButton okBtn;
     private JButton cancelBtn;
 
-    public NewItemDialog(SalesInvoiceFrame frame) {
+    public NewItemDialog(InvFrame frame) {
         itemNameField = new JTextField(20);
         itemNameLab = new JLabel("Item Name:");
         
